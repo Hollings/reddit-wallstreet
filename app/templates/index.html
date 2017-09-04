@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <p>{{ subreddits.name }} has  {{ netValue }} dollars</p>
+    
+    {% for portfolio in portfolios %}
+      <p>{{ portfolio.subreddit }} owns  {{ portfolio.amount }} {{ portfolio.symbol }}</p>
+   {% endfor %}
+   <hr />
+   {% for trade in trades %}
+      <p>{{trade.buyOrSell}} {{ trade.symbol }} for {{ trade.price }} (<a target="_blank" href="http://reddit.com{{ trade.permalink }}">link</a>)</p>
+   {% endfor %}
+{% endblock %}
+
+
