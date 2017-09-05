@@ -24,7 +24,12 @@ class Trades(db.Model):
 
 	@staticmethod
 	def Sell(symbol, price, permalink):
-		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell="Sold")
+		qty = models.Portfolio.query.filter(models.Portfolio.symbol == symbol).filter(models.Portfolio.subreddit == 'wallstreetbets').first()
+		if qty is None or int(qty.amount)==0:
+			return False
+		message = "Sold " + str(qty.amount) + " "
+		price = price * qty.amount
+		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell=message)
 		db.session.add(his)
 		db.session.commit()
 		print("MODEL SELL")
