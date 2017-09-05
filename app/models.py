@@ -6,9 +6,9 @@ import json
 class Trades(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	symbol = db.Column(db.String(64), index=True, unique=False)
-	permalink = db.Column(db.String(64), index=True, unique=False)
+	permalink = db.Column(db.String(1024), index=True, unique=False)
 	buyOrSell = db.Column(db.String(64), index=True, unique=False)
-	price = db.Column(db.Float, index=True, unique=True)
+	price = db.Column(db.Float, index=True, unique=False)
 	timestamp = db.Column(db.DateTime)
 	subreddit = db.Column(db.String, db.ForeignKey('subreddit.name'))
 
@@ -82,7 +82,7 @@ class Portfolio(db.Model):
 class Price(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	symbol = db.Column(db.String(64), index=True, unique=True)
-	price = db.Column(db.Float, index=True, unique=True)
+	price = db.Column(db.Float, index=True, unique=False)
 	lastUpdated = db.Column(db.DateTime)
 
 	@staticmethod
