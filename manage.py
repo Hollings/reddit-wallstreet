@@ -75,11 +75,9 @@ class GetNewTrades(Command):
 		subreddit = "wallstreetbets"
 		for comment in r.subreddit(subreddit).stream.comments(pause_after=0):
 			if comment is None:
-				print("No new posts. Sleeping")
 				time.sleep(60)
 				continue
 
-			print(i)
 			i+=1
 			results = re.findall(r'(?<![A-Z])[A-Z]{3,5}(?![A-Z])',comment.body)
 			for symbol in results[:3]:
@@ -90,10 +88,6 @@ class GetNewTrades(Command):
 
 	def run(self):
 		self.streamComments()
-		his = models.Trades(symbol="ddddddd",price=1234)
-		db.session.add(his)
-		db.session.commit()
-		print("hello world")
 
 
 
