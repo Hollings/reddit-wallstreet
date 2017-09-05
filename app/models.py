@@ -88,11 +88,13 @@ class Price(db.Model):
 	@staticmethod
 	def getPrice(stock):
 		price = models.Price.query.filter(models.Price.symbol == stock).first()
+		newPrice = False
 		if price is None:
+			newPrice = True
 			price = models.Price(symbol=stock, lastUpdated=datetime.utcnow())
 		now = datetime.utcnow()
 		priceTime = price.lastUpdated
-		if priceTime < datetime.utcnow()-timedelta(seconds=600):
+		if priceTime < datetime.utcnow()-timedelta(seconds=600) or newPrice:
 			q = requests.get('http://finance.google.com/finance/info?client=ig&q=' + stock )
 			if q.status_code == 200:
 				print("------ updating price for " + stock)
@@ -104,8 +106,6 @@ class Price(db.Model):
 				db.session.commit()
 				return lastPrice
 			else:
-				print(r.status_code)
-				print(r.text)
 				return False
 		else:
 			return price.price

@@ -1,5 +1,4 @@
 # flask imports
-import os
 from flask import Flask
 from app import app, db, models
 from app.models import Trades, Portfolio, Price
@@ -23,7 +22,7 @@ manager = Manager(app)
 
 class GetNewTrades(Command):
 	"prints hello world"
-		
+
 	def isfloat(self, value):
 		try:
 			float(value)
@@ -69,7 +68,7 @@ class GetNewTrades(Command):
 	def streamComments(self):
 		r = praw.Reddit(client_id='0W5oN1h3MgyxHQ',
 					 client_secret=os.environ['CLIENT_SECRET'],
-					 password=os.environ['R_PASSWORD'],
+           			 password=os.environ['R_PASSWORD'],
 					 user_agent='Wallstreet Bets Checker',
 					 username=os.environ['R_USERNAME'])
 		i = 0
@@ -88,7 +87,7 @@ class GetNewTrades(Command):
 					self.sellStock(symbol, subreddit, comment.permalink())
 				else:
 					self.buyStock(symbol, subreddit, comment.permalink())
-			
+
 	def run(self):
 		self.streamComments()
 		his = models.Trades(symbol="ddddddd",price=1234)
@@ -102,4 +101,3 @@ class GetNewTrades(Command):
 if __name__ == "__main__":
 	manager.add_command('GetNewTrades', GetNewTrades())
 	manager.run()
-
