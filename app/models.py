@@ -10,7 +10,7 @@ class Trades(db.Model):
 	buyOrSell = db.Column(db.String(64), index=True, unique=False)
 	price = db.Column(db.Float, index=True, unique=True)
 	timestamp = db.Column(db.DateTime)
-	subreddit = db.Column(db.Integer, db.ForeignKey('subreddit.name'))
+	subreddit = db.Column(db.String, db.ForeignKey('subreddit.name'))
 
 	def __repr__(self):
 		return '<Trades %r>' % (self.symbol)
@@ -41,7 +41,7 @@ class Subreddit(db.Model):
 class Portfolio(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	symbol = db.Column(db.String(64), index=True, unique=True)
-	subreddit = db.Column(db.Integer, db.ForeignKey('subreddit.name'))
+	subreddit = db.Column(db.String(64), db.ForeignKey('subreddit.name'))
 	amount = db.Column(db.Integer, index=True, unique=False)
 	@staticmethod
 	def getTotalValue(subreddit):
