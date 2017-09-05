@@ -1,9 +1,8 @@
 from app import app, db, models
 from flask import render_template
 
-@app.route('/')
-@app.route('/index')
-
+@app.route('/',  methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
 	trades = models.Trades.query.all()
 	trades.reverse()
