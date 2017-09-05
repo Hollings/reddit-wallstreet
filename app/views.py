@@ -9,5 +9,8 @@ def index():
 	portfolios = models.Portfolio.query.all()
 	subreddits = models.Subreddit.query.filter(models.Subreddit.name=='wallstreetbets').first()
 	totalValue = models.Portfolio.getTotalValue('wallstreetbets')
-	netValue = subreddits.money + totalValue
+	if subreddits:
+		netValue = subreddits.money + totalValue
+	else:
+		netValue = 0
 	return render_template('index.html',title="12312312#",trades=trades, portfolios=portfolios, subreddits=subreddits, netValue=netValue)
