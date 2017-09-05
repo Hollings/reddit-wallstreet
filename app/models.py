@@ -104,6 +104,8 @@ class Price(db.Model):
 				db.session.commit()
 				return lastPrice
 			else:
+				print(r.status_code)
+				print(r.text)
 				return False
 		else:
 			return price.price
