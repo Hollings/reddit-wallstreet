@@ -1,16 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-	{% if subreddits %}
-    	<p>{{ subreddits.name }} has  {{ netValue }} dollars</p>
+{% if subreddits %}
+<div>
+    	<h2>/r/{{ subreddits.name }} has  ${{ netValue }}</h2>
+    	<table>
+    		<tr><td>Money Spent:</td><td> ${{spent}}</td></tr>
+    		<tr><td>Value of Stocks:</td><td> ${{totalValue}}</td></tr>
+    	</table>
+    	
+
+    	<h5>This page auto-refreshes every 30 seconds</h5>
+    	</div>
     {% endif %}
+	<div style="width:50%;display: inline-block;float:left;">
+	<table>
+	<tr><th>Stock</th><th>Qty</th></tr>
     {% for portfolio in portfolios %}
-      <p>{{ portfolio.subreddit }} owns  {{ portfolio.amount }} {{ portfolio.symbol }}</p>
+     <tr><td>{{ portfolio.symbol }}</td><td>{{ portfolio.amount }}</td></tr>
    {% endfor %}
-   <hr />
+   </table>
+   </div>
+   	<div style="width:50%;display: inline-block;float:right:">
    {% for trade in trades %}
       <p>{{trade.buyOrSell}} {{ trade.symbol }} for {{ trade.price }} (<a target="_blank" href="http://reddit.com{{ trade.permalink }}">link</a>)</p>
    {% endfor %}
+   </div>
+   <script type="text/javascript">
+   	setTimeout("location.reload(true);", 30000);
+   </script>
 {% endblock %}
 
 
