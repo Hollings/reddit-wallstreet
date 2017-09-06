@@ -3,7 +3,7 @@
 {% block content %}
 {% if subreddits %}
 <div class="col-md-6 col-md-offset-3">
-    	<h2>/r/{{ subreddits.name }} has  ${{ netValue }}</h2>
+    	<h2>🔥🔥🔥 /r/{{ subreddits.name }} has {% if netValue > 0 %} earned ${{ netValue }} 📈 {% else %} lost ${{ netValue }} 📉{% endif %} </h2>
     	<table>
     		<tr><td>Money Spent:</td><td> ${{spent}}</td></tr>
     		<tr><td>Value of Stocks:</td><td> ${{totalValue}}</td></tr>
