@@ -2,6 +2,7 @@ from app import app, db, models
 from datetime import datetime, timedelta
 import requests
 import json
+import time
 
 class Trades(db.Model):
 	# Trades table is a history of all trades.
@@ -20,7 +21,7 @@ class Trades(db.Model):
 	def Buy(symbol, price, permalink):
 
 		# Add to the database
-		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell="Bought")
+		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell="Bought",timestamp=datetime.utcnow())
 		db.session.add(his)
 		db.session.commit()
 
@@ -37,7 +38,7 @@ class Trades(db.Model):
 		price = price * qty.amount
 
 		# And add it to the database
-		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell=message)
+		his = models.Trades(symbol=symbol,price=price,permalink=permalink,buyOrSell=message,timestamp=datetime.utcnow())
 		db.session.add(his)
 		db.session.commit()
 		print("MODEL SELL")

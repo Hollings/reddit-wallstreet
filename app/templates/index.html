@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if subreddits %}
-<div>
+<div class="col-md-6 col-md-offset-3">
     	<h2>/r/{{ subreddits.name }} has  ${{ netValue }}</h2>
     	<table>
     		<tr><td>Money Spent:</td><td> ${{spent}}</td></tr>
@@ -13,19 +13,24 @@
     	<h5>This page auto-refreshes every 30 seconds</h5>
     	</div>
     {% endif %}
-	<div style="width:50%;display: inline-block;float:left;">
-	<table>
+	<div class="col-md-3 col-md-offset-3">
+	<table class="table table-condensed table-striped">
+      <h4>Current Portfolio</h4>
+
 	<tr><th>Stock</th><th>Qty</th></tr>
     {% for portfolio in portfolios %}
      <tr><td>{{ portfolio.symbol }}</td><td>{{ portfolio.amount }}</td></tr>
    {% endfor %}
    </table>
    </div>
-   	<div style="width:50%;display: inline-block;float:right:">
+   	<div class="col-md-3">
+    <table class="table table-condensed">
+    <h4>Recent Trades</h4>
    {% for trade in trades %}
-      <p>{{trade.buyOrSell}} {{ trade.symbol }} for {{ trade.price }} (<a target="_blank" href="http://reddit.com{{ trade.permalink }}">link</a>)</p>
+      <tr><td>{{trade.timestamp.strftime('%b %d, %H:%M')}}</td><td>{{trade.buyOrSell}} </td><td>{{ trade.symbol }}</td><td> for {{ trade.price }}</td><td> (<a target="_blank" href="http://reddit.com{{ trade.permalink }}">link</a>)</td></tr>
    {% endfor %}
    </div>
+   </table>
    <script type="text/javascript">
    	setTimeout("location.reload(true);", 30000);
    </script>
