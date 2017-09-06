@@ -73,11 +73,17 @@ class GetNewTrades(Command):
            			 password=os.environ['R_PASSWORD'],
 					 user_agent='Wallstreet Bets Checker',
 					 username=os.environ['R_USERNAME'])
+		i = 0
 		subreddit = "wallstreetbets"
 
 		# Comment stream loops forever, grabbing any new comments on the subreddit.
 		# If no new comments are found, wait 1 minute
 		for comment in r.subreddit(subreddit).stream.comments(pause_after=0):
+			if i<99:
+				print(i)
+				# Reddit API gives us 100 historical posts. We only want live posts
+				i+=1
+				continue
 			if comment is None:
 				time.sleep(60)
 				continue
