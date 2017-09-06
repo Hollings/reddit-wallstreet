@@ -22,9 +22,8 @@ db = SQLAlchemy(app)
 manager = Manager(app)
 
 class GetNewTrades(Command):
-	"prints hello world"
-
 	def isfloat(self, value):
+		# Check if the price value is a float or a string with a comma in it
 		try:
 			float(value)
 			return True
@@ -36,25 +35,27 @@ class GetNewTrades(Command):
 		return price
 
 	def buyStock(self, symbol, subreddit, permalink):
-		# self.portfolio[symbol] += 1
+
+		# Get the price value from Google
 		price = self.getStockPrice(symbol)
+
+		# If the symbol isn't a real stock, just skip it
 		if not price:
 			return False
+
+		# Turn a sting with comma into a real float
 		if not self.isfloat(price):
 			price = float(price.replace(",",""))
+
+		# call the Buy method for the trade history and portfolio models.
 		with app.app_context():
 			Trades.Buy(symbol,price, permalink)
 			Portfolio.Buy(symbol, "wallstreetbets")
-
-		# his = models.Trades(symbol=symbol,price=price)
-		# db.session.add(his)
-		# db.session.commit()
-		# self.spent += price
 		print("Bought " + symbol + " for " + str(price))
 
 	def sellStock(self, symbol, subreddit, permalink):
-		# if self.portfolio[symbol] > 0:
-		# 	self.portfolio[symbol] -= 1
+
+		# Same as above, but with Sell
 		price = self.getStockPrice(symbol)
 		if not price:
 			return False
@@ -63,23 +64,26 @@ class GetNewTrades(Command):
 		with app.app_context():
 			Trades.Sell(symbol,price, permalink)
 			Portfolio.Sell(symbol, "wallstreetbets")
-		# 	self.sold += price
 		print("Sold " + symbol + " for " + str(price))
 
 	def streamComments(self):
+
 		r = praw.Reddit(client_id='0W5oN1h3MgyxHQ',
 					 client_secret=os.environ['CLIENT_SECRET'],
            			 password=os.environ['R_PASSWORD'],
 					 user_agent='Wallstreet Bets Checker',
 					 username=os.environ['R_USERNAME'])
-		i = 0
 		subreddit = "wallstreetbets"
+
+		# Comment stream loops forever, grabbing any new comments on the subreddit.
+		# If no new comments are found, wait 1 minute
 		for comment in r.subreddit(subreddit).stream.comments(pause_after=0):
 			if comment is None:
 				time.sleep(60)
 				continue
 
-			i+=1
+			# If a string of 3 or 4 capital letters are found in the comment
+			# body, check if its a 'sell' or 'buy'
 			results = re.findall(r'(?<![A-Z])[A-Z]{3,5}(?![A-Z])',comment.body)
 			for symbol in results[:3]:
 				if any(word in comment.body.lower() for word in ['short','sell','bear']):
