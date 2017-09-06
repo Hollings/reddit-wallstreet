@@ -97,6 +97,13 @@ class GetNewTrades(Command):
 				else:
 					self.buyStock(symbol, subreddit, comment.permalink())
 
+				# Using the Public API (without authentication), you are limited to 2,000
+				# requests per hour per IP (or up to a total of 48,000 requests a day).
+				# Lets just set the delay to a minute to be safe
+
+				# I'll update to make the caching allow to skip this later.
+				time.sleep(45)
+
 	def run(self):
 		self.streamComments()
 

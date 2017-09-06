@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import requests
 import json
 import time
+import csv
 
 class Trades(db.Model):
 	# Trades table is a history of all trades.
@@ -128,17 +129,20 @@ class Price(db.Model):
 		now = datetime.utcnow()
 		priceTime = price.lastUpdated
 		if priceTime < datetime.utcnow()-timedelta(seconds=600) or newPrice:
-			q = requests.get('http://finance.google.com/finance/info?client=ig&q=' + stock )
+			q = requests.get('http://finance.yahoo.com/d/quotes.csv?s='+ stock + '&f=snl1'  )
+			print(q.text)
 			if q.status_code == 200:
-
 				# Parse the API response and just pull the stock price.
+				lastPrice = q.text.split(',')[-1].strip()
+				if lastPrice == "N/A":
+					return False
 				print("------ updating price for " + stock)
-				lastPrice = json.loads(q.text[4:])[0]['l']
 				lastPrice = float(str(lastPrice).replace(",",""))
 				price.price = lastPrice
 				price.lastUpdated = datetime.utcnow()
 				db.session.add(price)
 				db.session.commit()
+
 				return lastPrice
 			else:
 				return False
