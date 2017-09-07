@@ -71,7 +71,7 @@ class Portfolio(db.Model):
 		p = models.Portfolio.query.filter(models.Portfolio.subreddit == subreddit)
 		totalValue = 0
 		for stock in p:
-			totalValue += models.Price.getPrice(stock.symbol) * stock.amount
+			totalValue += models.Price.getPrice(stock.symbol, False) * stock.amount
 		return totalValue
 
 	@staticmethod
@@ -115,7 +115,7 @@ class Price(db.Model):
 	lastUpdated = db.Column(db.DateTime)
 
 	@staticmethod
-	def getPrice(stock):
+	def getPrice(stock, update = True):
 
 		# Get or create new price
 		price = models.Price.query.filter(models.Price.symbol == stock).first()
@@ -128,7 +128,7 @@ class Price(db.Model):
 		# google's API
 		now = datetime.utcnow()
 		priceTime = price.lastUpdated
-		if priceTime < datetime.utcnow()-timedelta(seconds=600) or newPrice:
+		if (priceTime < datetime.utcnow()-timedelta(seconds=600) or newPrice) and update:
 			q = requests.get('http://finance.yahoo.com/d/quotes.csv?s='+ stock + '&f=snl1'  )
 			print(q.text)
 			if q.status_code == 200:
