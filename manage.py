@@ -107,9 +107,17 @@ class GetNewTrades(Command):
 	def run(self):
 		self.streamComments()
 
+class sellAllLowQuantity(Command):
+	def sellAllLowQuantity(self):
+		with app.app_context():
+			Portfolio.sellAllLowQuantity()
+
+	def run(self):
+		self.sellAllLowQuantity()
 
 
 
 if __name__ == "__main__":
+	manager.add_command('sellAllLowQuantity', sellAllLowQuantity())
 	manager.add_command('GetNewTrades', GetNewTrades())
 	manager.run()

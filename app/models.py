@@ -65,6 +65,13 @@ class Portfolio(db.Model):
 	amount = db.Column(db.Integer, index=True, unique=False)
 
 	@staticmethod
+
+	def sellAllLowQuantity():
+		p = models.Portfolio.query.filter(models.Portfolio.amount <= 2)
+		for stock in p:
+			models.Portfolio.Sell(stock.symbol, stock.subreddit)
+
+	@staticmethod
 	def getTotalValue(subreddit):
 
 		# Add up the total of all owned stocks

@@ -6,7 +6,7 @@ from flask import render_template
 
 def index():
 	trades = models.Trades.query.order_by(models.Trades.timestamp.desc())
-	portfolios = models.Portfolio.query.order_by(models.Portfolio.amount.desc())
+	portfolios = models.Portfolio.query.filter(models.Portfolio.amount > 0).order_by(models.Portfolio.amount.desc())
 	subreddits = models.Subreddit.query.filter(models.Subreddit.name=='wallstreetbets').first()
 	totalValue = models.Portfolio.getTotalValue('wallstreetbets')
 	if subreddits and totalValue:
